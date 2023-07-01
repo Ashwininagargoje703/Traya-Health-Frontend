@@ -5,7 +5,8 @@ import { AuthContext } from "../context/AuthContext";
 import { backendUrl } from "../http";
 
 export default function Register() {
-  const [username, setUsername] = useState("");
+  const [name, setName] = useState(""); // Add name state
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { handleLogin } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ export default function Register() {
 
   const submitUser = (e) => {
     e.preventDefault();
-    let user = { username, password };
+    let user = { name, email, password }; // Include name in the user object
 
     fetch(`${backendUrl}/user/register`, {
       method: "POST",
@@ -27,14 +28,15 @@ export default function Register() {
       .then((res) => {
         if (res.status === 201) {
           handleLogin(res?.user, res.token);
+          navigate("/login");
         }
-        navigate("/login");
       })
       .catch((e) => {
         alert("incorrect details!, please enter correct details.");
       });
 
-    setUsername("");
+    setName(""); // Clear the name field
+    setEmail("");
     setPassword("");
   };
 
@@ -53,12 +55,25 @@ export default function Register() {
           <Grid item>
             <TextField
               type="text"
-              id="username"
-              name="username"
-              label="Username"
+              id="name"
+              name="name"
+              label="Name" // Update the label to "Name"
               variant="outlined"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              fullWidth
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              type="email"
+              id="email"
+              name="email"
+              label="Email"
+              variant="outlined"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
               fullWidth
             />

@@ -1,12 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../context/AuthContext";
+import React, { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography, Snackbar } from "@mui/material";
+import { Alert } from "@mui/material";
+import { AuthContext } from "../context/AuthContext";
 import { backendUrl } from "../http";
 
 export default function Login() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertSeverity, setAlertSeverity] = useState("");
   const { user, token, handleLogin } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -16,11 +20,15 @@ export default function Login() {
     if (user || token) {
       navigate("/");
     }
-  }, []);
+  }, [handleLogin, token, user]);
+
+  const handleSnackbarClose = () => {
+    setShowAlert(false);
+  };
 
   const submitUser = (e) => {
     e.preventDefault();
-    let user = { username, password };
+    let user = { email, password };
 
     fetch(`${backendUrl}/user/login`, {
       method: "POST",
@@ -32,21 +40,31 @@ export default function Login() {
       .then((res) => res.json())
       .then((res) => {
         if (res.status === 404) {
-          return alert("user not found!");
-        } else if (res.status === 401) {
-          return alert("incorrect details!");
+          setAlertSeverity("error");
+          setAlertMessage("User not found!");
+        } else if (res.status === 400) {
+          setAlertSeverity("error");
+          setAlertMessage("Incorrect password!");
+        } else if (res.status === 200) {
+          handleLogin(res?.user, res?.token);
+          setAlertSeverity("success");
+          setAlertMessage("Login successful!");
+        } else {
+          setAlertSeverity("error");
+          setAlertMessage("Something went wrong!");
         }
-        handleLogin(res?.user, res?.token);
+        setShowAlert(true);
       })
       .catch((e) => {
         console.log(e);
-        alert("something went wrong!");
+        setAlertSeverity("error");
+        setAlertMessage("Something went wrong!");
+        setShowAlert(true);
       });
 
-    setUsername("");
+    setEmail("");
     setPassword("");
   };
-
   return (
     <Box
       sx={{
@@ -58,43 +76,51 @@ export default function Login() {
     >
       <Typography variant="h6">Login</Typography>
       <form onSubmit={submitUser}>
-        <Grid container spacing={2} direction="column">
-          <Grid item>
-            <TextField
-              type="text"
-              id="username"
-              name="username"
-              label="Username"
-              variant="outlined"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              fullWidth
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              type="password"
-              id="password"
-              name="password"
-              label="Password"
-              variant="outlined"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              fullWidth
-            />
-          </Grid>
-          <Grid item>
-            <Button type="submit" variant="contained" color="primary" fullWidth>
-              Login
-            </Button>
-          </Grid>
-        </Grid>
+        <Box sx={{ display: "grid", gap: 2 }}>
+          <TextField
+            type="email"
+            id="email"
+            name="email"
+            label="Email"
+            variant="outlined"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            defaultValue="Small"
+            size="small"
+          />
+          <TextField
+            type="password"
+            id="password"
+            name="password"
+            label="Password"
+            variant="outlined"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            defaultValue="Small"
+            size="small"
+          />
+          <Button variant="contained" type="submit">
+            Login
+          </Button>
+        </Box>
       </form>
       <Typography>
         Don't have an account? <Link to="/register">Register here</Link>
       </Typography>
+
+      {showAlert && (
+        <Snackbar
+          open={showAlert}
+          autoHideDuration={5000}
+          onClose={handleSnackbarClose}
+        >
+          <Alert onClose={handleSnackbarClose} severity={alertSeverity}>
+            {alertMessage}
+          </Alert>
+        </Snackbar>
+      )}
     </Box>
   );
 }
