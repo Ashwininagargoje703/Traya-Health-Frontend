@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 
-const FeedbackForm = () => {
+const Feedback = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [rating, setRating] = useState(0);
@@ -183,4 +183,4 @@ const FeedbackForm = () => {
   );
 };
 
-export default FeedbackForm;
+export default Feedback;
