@@ -170,7 +170,7 @@ const FeedbackForm = () => {
             variant="contained"
             onClick={handleEdit}
             sx={{
-              width: 90,
+              width: 140,
               backgroundColor: "black",
               textTransform: "none",
             }}
