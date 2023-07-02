@@ -1,6 +1,5 @@
 import "./App.css";
 import Header from "./Components/Header";
-import FeedbackForm from "./Components/feedback";
 import AllRoutes from "./Pages/AllRoutes";
 
 function App() {

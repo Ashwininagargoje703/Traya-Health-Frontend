@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import Login from "./Login";
 import Register from "./Register";
-import FeedbackForm from "../Components/feedback";
+import FeedbackForm from "../Components/Feedback";
 
 export default function AllRoutes() {
   return (

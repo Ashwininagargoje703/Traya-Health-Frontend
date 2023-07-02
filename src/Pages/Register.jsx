@@ -15,7 +15,7 @@ export default function Register() {
 
   const submitUser = (e) => {
     e.preventDefault();
-    let user = { name, email, password }; // Include name in the user object
+    let user = { name, email, password };
 
     fetch(`${backendUrl}/user/register`, {
       method: "POST",
@@ -27,15 +27,17 @@ export default function Register() {
       .then((res) => res.json())
       .then((res) => {
         if (res.status === 201) {
-          handleLogin(res?.user, res.token);
+          handleLogin(res?.user);
+          // Save email in localStorage
+          localStorage.setItem("email", email);
           navigate("/login");
         }
       })
       .catch((e) => {
-        alert("incorrect details!, please enter correct details.");
+        alert("Incorrect details! Please enter correct details.");
       });
 
-    setName(""); // Clear the name field
+    setName("");
     setEmail("");
     setPassword("");
   };
@@ -46,6 +48,7 @@ export default function Register() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        alignSelf: "center",
         gap: "1rem",
       }}
     >
@@ -62,7 +65,12 @@ export default function Register() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              fullWidth
+              defaultValue="Small"
+              size="small"
+              style={{
+                minWidth: 300,
+                maxWidth: 500,
+              }}
             />
           </Grid>
           <Grid item>
@@ -75,7 +83,12 @@ export default function Register() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              fullWidth
+              defaultValue="Small"
+              size="small"
+              style={{
+                minWidth: 300,
+                maxWidth: 500,
+              }}
             />
           </Grid>
           <Grid item>
@@ -88,11 +101,24 @@ export default function Register() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              fullWidth
+              defaultValue="Small"
+              size="small"
+              style={{
+                minWidth: 300,
+                maxWidth: 500,
+              }}
             />
           </Grid>
           <Grid item>
-            <Button type="submit" variant="contained" color="primary" fullWidth>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{
+                width: 90,
+                backgroundColor: "black",
+                textTransform: "none",
+              }}
+            >
               Register
             </Button>
           </Grid>

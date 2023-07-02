@@ -11,16 +11,16 @@ export default function Login() {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState("");
-  const { user, token, handleLogin } = useContext(AuthContext);
+  const { user, handleLogin } = useContext(AuthContext);
   const navigate = useNavigate();
 
   document.title = "Login";
 
   useEffect(() => {
-    if (user || token) {
+    if (user) {
       navigate("/");
     }
-  }, [handleLogin, token, user]);
+  }, [handleLogin, user]);
 
   const handleSnackbarClose = () => {
     setShowAlert(false);
@@ -49,6 +49,8 @@ export default function Login() {
           handleLogin(res?.user, res?.token);
           setAlertSeverity("success");
           setAlertMessage("Login successful!");
+          // Save email in local storage
+          localStorage.setItem("email", email);
         } else {
           setAlertSeverity("error");
           setAlertMessage("Something went wrong!");
@@ -72,6 +74,8 @@ export default function Login() {
         flexDirection: "column",
         alignItems: "center",
         gap: "1rem",
+        textAlign: "center",
+        justifyContent: "center",
       }}
     >
       <Typography variant="h6">Login</Typography>
@@ -88,6 +92,10 @@ export default function Login() {
             required
             defaultValue="Small"
             size="small"
+            style={{
+              minWidth: 300,
+              maxWidth: 500,
+            }}
           />
           <TextField
             type="password"
@@ -100,10 +108,30 @@ export default function Login() {
             required
             defaultValue="Small"
             size="small"
+            style={{
+              minWidth: 300,
+              maxWidth: 500,
+            }}
           />
-          <Button variant="contained" type="submit">
-            Login
-          </Button>
+          <Box
+            sx={{
+              textAlign: "center",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Button
+              variant="contained"
+              type="submit"
+              sx={{
+                width: 80,
+                backgroundColor: "black",
+                textTransform: "none",
+              }}
+            >
+              Login
+            </Button>
+          </Box>
         </Box>
       </form>
       <Typography>
