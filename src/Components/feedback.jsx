@@ -141,7 +141,15 @@ const FeedbackForm = () => {
             fullWidth
             margin="normal"
           />
-          <Button type="submit" variant="contained" color="primary">
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{
+              width: 80,
+              backgroundColor: "black",
+              textTransform: "none",
+            }}
+          >
             {editMode ? "Update" : "Submit"}
           </Button>
         </form>
@@ -158,7 +166,15 @@ const FeedbackForm = () => {
               {/* Add more fields as needed */}
             </div>
           ))}
-          <Button variant="contained" color="primary" onClick={handleEdit}>
+          <Button
+            variant="contained"
+            onClick={handleEdit}
+            sx={{
+              width: 90,
+              backgroundColor: "black",
+              textTransform: "none",
+            }}
+          >
             Edit Feedback
           </Button>
         </div>
